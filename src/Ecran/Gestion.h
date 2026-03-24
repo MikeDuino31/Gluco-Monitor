@@ -23,6 +23,7 @@
 #define pageFuseauH 50
 #define pageLangue 60
 #define pageAutBrute 70
+#define pageAbout 80
 
 // Pin definitions
 #define GFX_BL 1
@@ -51,7 +52,7 @@ extern int16_t EcranW, EcranH, EcranW2, EcranH2, EcranH_20, EcranH_30;
 extern int8_t rotation;
 
 void InitEcran();
-bool getTouchPoint();
+bool getTouchPoint(uint16_t &x, uint16_t &y, int16_t &dX, int16_t &dY);
 void loopEcran();
 void AccueiLoop() ;
 void PrintCentre(Arduino_Canvas *canva, const String &S, int16_t X, int16_t Y, uint8_t Sz);

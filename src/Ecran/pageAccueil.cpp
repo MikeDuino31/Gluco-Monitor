@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "Ecran/Gestion.h"
 #include "time.h"
+#include "Langues/Langue.h"
 
 
 
@@ -36,7 +37,7 @@ void AccueiLoop()
     if (Glycemie == "")
     {
         CanvaAccueil->setFont(u8g2_font_helvB18_tf);
-        PrintCentre(CanvaAccueil, "Attente glycémie", W2, C + 25, 1);
+        PrintCentre(CanvaAccueil, T("WaitGluco"), W2, C + 25, 1);
     }
     else
     {
@@ -150,7 +151,7 @@ void AccueiLoop()
     else
     {
         CanvaAccueil->setTextColor(RGB565_GREY);
-        PrintDroite(CanvaAccueil, "Age", EcranW, EcranH / 3, 1);
+        PrintDroite(CanvaAccueil, T("Age"), EcranW, EcranH / 3, 1);
     }
     CanvaAccueil->setTextColor(RGB565_WHITE);
     // Trace Avancement demande glycémie

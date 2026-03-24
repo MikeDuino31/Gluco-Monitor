@@ -7,6 +7,8 @@
 #include <Serie.h>
 #include "Heure.h"
 #include "Stock.h"
+#include "Ecran/pageWifiList.h"
+#include "Langues/Langue.h"
 
 // WIFI
 
@@ -24,12 +26,7 @@ bool Liste_WIFI();
 // ***************************
 void Init_Internet()
 {
-    String PointsMessage = "",PointsMessage2 = "";
-
-    CanvaBase->fillRect(0, EcranH2, EcranW, EcranH2, RGB565_BLACK);
-    CanvaBase->setFont(u8g2_font_helvB18_tf);
-    PrintCentre(CanvaBase, "Lancement du Wifi", EcranW2, EcranH - 100, 1);
-    CanvaBase->flush();
+    String PointsMessage = "", PointsMessage2 = "";
     hostname = String(HOSTNAME);
     uint32_t chipId = 0;
     for (int i = 0; i < 17; i = i + 8)
@@ -38,88 +35,121 @@ void Init_Internet()
     }
     hostname += String(chipId); // Add chip ID to hostname
     EcranPrintln("Hostname : " + hostname);
-    WiFi.hostname(hostname);
-    bool bestWifi = false;
 
-    EcranPrintln("Lancement du Wifi");
-
-    WiFi.mode(WIFI_STA);
-    WiFi.disconnect();
-    WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
-    WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
-    bestWifi = Liste_WIFI();
-    EcranPrint("Version : ");
-    EcranPrintln(Version);
-    LireSerial();
-
-    // Check WiFi connection
-    // ... check mode
-    if (WiFi.getMode() != WIFI_STA)
-    {
-        WiFi.mode(WIFI_STA);
-        delay(10);
-    }
-
-    DefFuseauHoraire();
-
-    // WIFI
-
-    EcranPrintln("ssid:" + ssid);
-    EcranPrintln("password:" + password);
+    CanvaBase->fillRect(0, EcranH2, EcranW, EcranH2, RGB565_BLACK);
     if (ssid.length() > 0)
     {
-
-        CanvaBase->fillRect(0, EcranH2, EcranW, EcranH2, RGB565_BLACK);
         CanvaBase->setFont(u8g2_font_helvB18_tf);
-        PrintCentre(CanvaBase, "Wifi Begin", EcranW2, EcranH - 100, 1);
-        PrintCentre(CanvaBase, ssid, EcranW2, EcranH - 50, 1);
+        PrintCentre(CanvaBase, T("InitWifi"), EcranW2, EcranH - 100, 1);
         CanvaBase->flush();
-        EcranPrintln("Wifi Begin : " + ssid);
-        if (bestWifi)
+
+        WiFi.hostname(hostname);
+        bool bestWifi = false;
+
+        EcranPrintln(T("InitWifi"));
+
+        WiFi.mode(WIFI_STA);
+        WiFi.disconnect();
+        WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
+        WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
+        bestWifi = Liste_WIFI();
+        EcranPrint(T("Version"));
+        EcranPrintln(Version);
+        LireSerial();
+
+        // Check WiFi connection
+        // ... check mode
+        if (WiFi.getMode() != WIFI_STA)
         {
-            WiFi.begin(ssid.c_str(), password.c_str(), 0, bestBSSID); // Connexion forcée au BSSID choisi
+            WiFi.mode(WIFI_STA);
+            delay(10);
+        }
+
+        DefFuseauHoraire();
+
+        // WIFI
+
+        EcranPrintln(T("Nom_WiFi") + ssid);
+        EcranPrintln(T("MotDePasse") + password);
+        if (ssid.length() > 0)
+        {
+
+            CanvaBase->fillRect(0, EcranH2, EcranW, EcranH2, RGB565_BLACK);
+            CanvaBase->setFont(u8g2_font_helvB18_tf);
+            PrintCentre(CanvaBase, "WiFi", EcranW2, EcranH - 100, 1);
+            PrintCentre(CanvaBase, ssid, EcranW2, EcranH - 50, 1);
+            CanvaBase->flush();
+            EcranPrintln(T("RechercheWiFi") + ssid);
+            if (bestWifi)
+            {
+                WiFi.begin(ssid.c_str(), password.c_str(), 0, bestBSSID); // Connexion forcée au BSSID choisi
+            }
+            else
+            {
+                WiFi.begin(ssid.c_str(), password.c_str());
+            }
+
+            while (WiFi.status() != WL_CONNECTED && (millis() < 40000))
+            { // Attente connexion au Wifi
+                PointsMessage += ".";
+                PrintCentre(CanvaBase, PointsMessage, EcranW2, EcranH - 10, 1);
+                EcranPrint(".");
+                EcranPrint(String(WiFi.status()));
+                CanvaBase->flush();
+                for (int i = 0; i < 10; i++)
+                {
+                    delay(30);
+                    LireSerial();
+                }
+            }
+            EcranPrintln("");
+        }
+
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            MyIP = WiFi.localIP().toString();
+            EcranPrintln(T("ConnectedWiFi") + MyIP + T("ou") + hostname + ".local");
+            PointsMessage = T("ConnectedWiFi") + MyIP;
+            PointsMessage2 = T("ou") + hostname + ".local";
         }
         else
         {
-            WiFi.begin(ssid.c_str(), password.c_str());
-        }
+            EcranPrintln(T("EchecWiFi"));
 
-        while (WiFi.status() != WL_CONNECTED && (millis() < 40000))
-        { // Attente connexion au Wifi
-            PointsMessage += ".";
-            PrintCentre(CanvaBase, PointsMessage, EcranW2, EcranH - 10, 1);
-            EcranPrint(".");
-            EcranPrint(String(WiFi.status()));
-            CanvaBase->flush();
-            for (int i = 0; i < 10; i++)
-            {
-                delay(30);
-                LireSerial();
-            }
+            PointsMessage = T("EchecWiFi");
         }
-        EcranPrintln("");
-    }
-
-    if (WiFi.status() == WL_CONNECTED)
-    {
-        MyIP = WiFi.localIP().toString();
-        EcranPrintln("Connecté par WiFi, addresse IP : " + MyIP + " or " + hostname + ".local");
-        PointsMessage = "Connecté par WiFi, addresse IP : " + MyIP ;
-        PointsMessage2 =  " or " + hostname + ".local";
+        CanvaBase->setFont(u8g2_font_10x20_tf);
+        CanvaBase->fillRect(0, EcranH2, EcranW, EcranH2, RGB565_BLACK);
+        PrintCentre(CanvaBase, PointsMessage, EcranW2, EcranH - 100, 1);
+        PrintCentre(CanvaBase, PointsMessage2, EcranW2, EcranH - 50, 1);
+        WiFi.scanDelete(); //
+        CanvaBase->flush();
+        delay(2000);
     }
     else
-    {
-        EcranPrintln("Echec de connexion au WiFi");
-        
-        PointsMessage = "Echec de connexion au WiFi";
+    { // Le ssid n'existe pas encore
+        uint16_t Tx, Ty;
+        int16_t dX, dY;
+        Bouton Boutons[1] = {
+            {25, 200, 430, 50, "Push to set WiFi"}};
+            Boutons[0].Texte=T("SelectWifi");
+        Bouton_Trace(Boutons[0], RGB565_WHITE, CanvaBase);
+        CanvaBase->flush();
+        bool notClick = true;
+        unsigned long T0=millis();
+        while (notClick && (millis()-T0<10000))
+        {
+            if (getTouchPoint(Tx, Ty, dX, dY))
+            {
+                if (Bouton_Appui(Boutons[0], Tx, Ty, CanvaBase))
+                {
+                    WifiListSetup();
+                    notClick = false;
+                }
+            }
+            LireSerial();
+        }
     }
-    CanvaBase->setFont(u8g2_font_10x20_tf);
-    CanvaBase->fillRect(0, EcranH2, EcranW, EcranH2, RGB565_BLACK);
-    PrintCentre(CanvaBase, PointsMessage , EcranW2, EcranH - 100, 1);
-    PrintCentre(CanvaBase, PointsMessage2 , EcranW2, EcranH - 50, 1);
-    CanvaBase->flush();
-    WiFi.scanDelete(); //
-    delay(2000);
 }
 
 bool Liste_WIFI()
@@ -129,19 +159,19 @@ bool Liste_WIFI()
     int n = 0;
     // WiFi.disconnect();
     delay(100);
-    EcranPrintln("Scan start");
+    EcranPrintln(T("ScanStart"));
     // WiFi.scanNetworks will return the number of networks found.
     n = WiFi.scanNetworks();
-    EcranPrintln("Scan done");
+    EcranPrintln(T("ScanTermine"));
     Liste_AP = "";
     if (n <= 0)
     {
-        EcranPrintln("Pas de réseau Wifi trouvé");
+        EcranPrintln(T("PasReseau"));
     }
     else
     {
         EcranPrint(String(n));
-        EcranPrintln(" réseaux trouvés");
+        EcranPrintln(T("reseauxTrouves"));
         EcranPrintln("|Nr|          SSID              |   RSSI  |       MAC       | Channel |");
         for (int i = 0; i < n; ++i)
         {

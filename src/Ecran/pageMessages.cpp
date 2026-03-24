@@ -2,8 +2,9 @@
 #include "Ecran/Gestion.h"
 #include <U8g2lib.h>
 #include "Config.h"
+#include "Langues/Langue.h"
 
-#define MessageTitre "Historique"
+
 
 static uint16_t compteurLoopMessage = 0; // Pour ne pas systematiquement rafraichir la page
 static int16_t MesIdxDebut = 0, MesIdxFin = 0;
@@ -13,7 +14,7 @@ void MessagesInit()
     CanvaMessage->fillScreen(RGB565_BLACK);
     CanvaMessage->setTextColor(RGB565_WHITE);
     CanvaMessage->setFont(u8g2_font_10x20_tf);
-    PrintCentre(CanvaMessage, MessageTitre, EcranW2, 18, 1);
+    PrintCentre(CanvaMessage, T("Historique"), EcranW2, 18, 1);
 }
 
 void pageMessageDefilement(int16_t DeltaTouchY)
@@ -97,9 +98,7 @@ void MessageLoop()
     {
         if (MessageEcran[idx] == RS[0]) // Caractère spécial pour les messages d'erreur
         {
-            CanvaMessage->setTextColor(RGB565_ORANGE);
-            
-            
+            CanvaMessage->setTextColor(RGB565_ORANGE);          
         }
         else
         {
@@ -119,7 +118,7 @@ void MessageLoop()
         MesIdxDebut = p; // Ligne d'après
         CanvaMessage->fillRect(0, 0, EcranW, 20, RGB565_BLACK);
         CanvaMessage->setFont(u8g2_font_10x20_tf);
-        PrintCentre(CanvaMessage, MessageTitre, EcranW2, 18, 1);
+        PrintCentre(CanvaMessage, T("Historique"), EcranW2, 18, 1);
     }
 }
 void recalPageMessage()  //Pour mettre en fin de tableau quand on est pas sur la page

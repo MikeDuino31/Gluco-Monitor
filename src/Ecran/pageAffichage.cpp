@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include "Ecran/Gestion.h"
 #include "Stock.h"
+#include "Langues/Langue.h"
 
 static RadioBouton Rboutons[5] = {
     {10, 110, 15, "25%"},
@@ -20,20 +21,20 @@ void pageAffichageSetup()
     CanvaBase->setFont(u8g2_font_helvB18_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
     CanvaBase->fillScreen(C_grisFonce);
-    PrintCentre(CanvaBase, "Affichage", EcranW / 2, 30, 1);
+    PrintCentre(CanvaBase, T("Display"), EcranW / 2, 30, 1);
     //============= Luminosité ==========================
     CanvaBase->fillRoundRect(7, 50, EcranW - 14, 110, 8, RGB565_NAVY);
     CanvaBase->drawRoundRect(7, 50, EcranW - 14, 110, 8, RGB565_WHITE);
     CanvaBase->setFont(u8g2_font_helvB14_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
-    PrintCentre(CanvaBase, "Luminosité écran de nuit", EcranW / 2, 80, 1);
+    PrintCentre(CanvaBase, T("Luminosite"), EcranW / 2, 80, 1);
 
     //============= Rotation ==========================
     CanvaBase->fillRoundRect(7, 180, EcranW - 14, 110, 8, RGB565_NAVY);
     CanvaBase->drawRoundRect(7, 180, EcranW - 14, 110, 8, RGB565_WHITE);
     CanvaBase->setFont(u8g2_font_helvB14_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
-    PrintCentre(CanvaBase, "Rotation écran", EcranW / 2, 210, 1);
+    PrintCentre(CanvaBase, T("Rotation"), EcranW / 2, 210, 1);
     DrawBoutons();
 
     CanvaBase->flush();

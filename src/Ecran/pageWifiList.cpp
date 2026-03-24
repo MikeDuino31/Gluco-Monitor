@@ -6,6 +6,7 @@
 #include <Ecran/pageClavier.h>
 #include <Stock.h>
 
+
 String Format2_WiFi(int num, const String &nom, int niveau);        // 
 static int nbWifi = 0, iSelected = -1; // Nombre de réseaux trouvés et index du réseau sélectionné
 static String ssidList[6]; // SSID du réseau sélectionné
@@ -19,8 +20,8 @@ void WifiListSetup()
     CanvaBase->setFont(u8g2_font_helvB18_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
     CanvaBase->fillScreen(C_grisFonce);
-    PrintCentre(CanvaBase, "Liste des réseaux Wifi", EcranW / 2, 30, 1);
-    PrintCentre(CanvaBase, "Scan start", EcranW / 2, 100, 1);
+    PrintCentre(CanvaBase, T("ListWiFi"), EcranW / 2, 30, 1);
+    PrintCentre(CanvaBase, T("ScanStart"), EcranW / 2, 100, 1);
     CanvaBase->flush();
     // WiFi.scanNetworks will return the number of networks found.
     WiFi.mode(WIFI_STA);
@@ -28,7 +29,7 @@ void WifiListSetup()
     WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
     WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
     nbWifi = WiFi.scanNetworks();
-    PrintCentre(CanvaBase, "Scan done", EcranW / 2, 150, 1);
+    PrintCentre(CanvaBase, T("ScanTermine"), EcranW / 2, 150, 1);
     CanvaBase->flush();
     delay(500);
     CanvaBase->fillRect(0, 40, EcranW, EcranH - 48, C_grisFonce);
@@ -36,7 +37,7 @@ void WifiListSetup()
         nbWifi = 6; // Limite à 6 réseaux pour éviter les débordements
     if (nbWifi <= 0)
     {
-        PrintCentre(CanvaBase, "Pas de réseau Wifi trouvé", EcranW / 2, 80, 1);
+        PrintCentre(CanvaBase, T("PasReseau"), EcranW / 2, 80, 1);
     }
     else
     {

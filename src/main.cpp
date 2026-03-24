@@ -25,6 +25,7 @@
 #include "Ecran/pageLibreServeur.h"
 #include "Ecran/pageCompte.h"
 #include "Ecran/pageInfos.h"
+#include "Langues/Langue.h"
 
 static unsigned long testMillis = 0;
 
@@ -67,6 +68,30 @@ void setup()
   Serial.printf("PSRAM: %d\n", psramFound());
   Serial.printf("Free heap: %d\n", ESP.getFreeHeap());
   Serial.printf("Free PSRAM: %d\n", ESP.getFreePsram());
+  if (libreEmail.length() < 4)
+  { // on a pas encore de compte defini
+    CanvaBase->fillRect(0, EcranH2, EcranW, EcranH2, RGB565_BLACK);
+    uint16_t Tx, Ty;
+    int16_t dX, dY;
+    Bouton Boutons[1] = {
+        {25, 200, 430, 50, "Push to set LibreLinkUp parameters"}};
+    Bouton_Trace(Boutons[0], RGB565_WHITE, CanvaBase);
+    CanvaBase->flush();
+    bool notClick = true;
+    unsigned long T0 = millis();
+    while (notClick && (millis() - T0 < 10000))
+    {
+      if (getTouchPoint(Tx, Ty, dX, dY))
+      {
+        if (Bouton_Appui(Boutons[0], Tx, Ty, CanvaBase))
+        {
+          CompteSetup();
+          notClick = false;
+        }
+      }
+      LireSerial();
+    }
+  }
 }
 
 void loop()
@@ -82,6 +107,16 @@ void loop()
 
   if (millis() - lastGlycOkMillis > 1210000) // Si on n'a pas réussi à récupérer une glycémie depuis plus de 20 minutes, on redémarre le module pour tenter de résoudre les problèmes de communication
     AlertePasdeGlycemie();
+
+  if (HeureValide && lastGlyUnixTime > 0)
+  {
+
+    time_t now;
+    time(&now);
+    AgeGlycemie = (long)now - lastGlyUnixTime;
+    if (AgeGlycemie > 1800)
+      AlertePasdeGlycemie(); // Pas de nouvelle mesure depuis 30mn. Exemple changement de capteur
+  }
 
   //======= Page HTML Brute ============
 

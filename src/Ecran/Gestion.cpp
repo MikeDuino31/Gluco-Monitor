@@ -18,6 +18,8 @@
 #include "Ecran/pageFuseauH.h"
 #include "Ecran/pageLangue.h"
 #include "Ecran/pageAutBrute.h"
+#include "Ecran/pageAbout.h"
+#include "Langues/Langue.h"
 
 //************Alternative declarations *******************************************
 // Arduino_DataBus *bus = new Arduino_ESP32QSPI(45, 47, 21, 48, 40, 39);
@@ -96,7 +98,9 @@ void InitEcran()
   CanvaBase->setFont(u8g2_font_fub35_tf);
   PrintCentre(CanvaBase, "Gluco-Monitor", EcranW2, EcranH2 - 10, 1);
   CanvaBase->setFont(u8g2_font_helvB18_tf);
-  PrintDroite(CanvaBase, "by F1ATB", EcranW - 10, EcranH - 30, 1);
+  PrintDroite(CanvaBase, T("byF1ATB"), EcranW - 10, EcranH - 30, 1);
+  CanvaBase->setFont(u8g2_font_helvB14_tf);
+  PrintGauche(CanvaBase, "https://F1ATB.fr", 10, EcranH - 24, 1);
   CanvaBase->flush();
   Serial.println("Ecran Init");
   delay(3000);
@@ -192,6 +196,9 @@ void loopEcran()
             break;
           case pageAutBrute:
             handleTouch_AutBrute(touchX, touchY);
+            break;
+          case pageAbout:
+            handleTouch_About(touchX, touchY,DeltaTouchY);
             break;
           }
         }
@@ -555,8 +562,8 @@ void AlertePasdeGlycemie()
   CanvaBase->fillScreen(RGB565_DARKSALMON);
   CanvaBase->setFont(u8g2_font_helvB18_tf);
   CanvaBase->setTextColor(RGB565_YELLOW);
-  PrintCentre(CanvaBase, "Pas de glycémie récente", EcranW2, EcranH2 - 10, 1);
-  PrintCentre(CanvaBase, "Redémarrage", EcranW2, EcranH2 + 40, 1);
+  PrintCentre(CanvaBase, T("NoRecentGluco"), EcranW2, EcranH2 - 10, 1);
+  PrintCentre(CanvaBase, T("Restart"), EcranW2, EcranH2 + 40, 1);
   CanvaBase->flush();
   delay(10000);
   ESP.restart();

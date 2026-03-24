@@ -1,6 +1,7 @@
 #include "Config.h"
 #include <Arduino.h>
 #include "Ecran/Gestion.h"
+#include "Langues/Langue.h"
 
 
 
@@ -10,8 +11,9 @@ static Bouton Boutons[2] = {
 
 void AutorisationInit()
 {
-    
-    String Titre = "Autorisation accès données";
+    Boutons[0].Texte=T("Refuse");
+     Boutons[1].Texte=T("Accept");
+    String Titre = T("OKData");
     CanvaBase->fillScreen(C_grisFonce);
     CanvaBase->setFont(u8g2_font_helvB18_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
@@ -46,7 +48,7 @@ void handleTouch_AutBrute(uint16_t touchX, uint16_t touchY)
                 AutorisationPageBrute = true;
                 break;
             }
-            Serial.println("************???????????????****======================");
+            
             PageActu = pageAccueil;
         }
     }

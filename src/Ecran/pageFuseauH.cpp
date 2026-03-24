@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include "Ecran/Gestion.h"
 #include "Stock.h"
+#include "Langues/Langue.h"
 
 static int16_t idxVisu = 0, NbBoutons = 0;
 static RadioBouton Rboutons[10];
@@ -17,7 +18,7 @@ void pageFuseauSetup()
     CanvaBase->setFont(u8g2_font_helvB18_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
     CanvaBase->fillScreen(C_grisFonce);
-    PrintCentre(CanvaBase, "Fuseau Horaire", EcranW / 2, 30, 1);
+    PrintCentre(CanvaBase, T("F_Hor"), EcranW / 2, 30, 1);
     //============= FUSEAU ==========================
     CanvaBase->fillRoundRect(7, 50, EcranW - 14, 260, 8, RGB565_NAVY);
     CanvaBase->drawRoundRect(7, 50, EcranW - 14, 260, 8, RGB565_WHITE);

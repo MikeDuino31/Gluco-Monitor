@@ -5,6 +5,7 @@
 #include <Ecran/Gestion.h>
 #include <Ecran/pageCompte.h>
 #include <Stock.h>
+#include "Langues/Langue.h"
 
 static Bouton BoutonBas[2] = {{15, 288, 210, 30, "Annuler"},
                               {255, 288, 210, 30, "OK"}};
@@ -18,6 +19,7 @@ static int idxBoutonSelectionne = -1;
 void pageLibreServeurSetup()
 {
     PageActu = pageLibreServeur;
+    BoutonBas[0].Texte=T("Cancel");
     String Titre = "Sélectionner la zone du serveur LibreLinkUp";
     CanvaBase->fillScreen(C_grisFonce);
     CanvaBase->setTextColor(RGB565_BLACK);

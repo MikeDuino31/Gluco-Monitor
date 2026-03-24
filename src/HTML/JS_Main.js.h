@@ -1,5 +1,5 @@
 // language=JavaScript
-static const char JS_Main[] PROGMEM = R"rawliteral(
+static const char *JS_Main = R"rawliteral(
 
 const cx = 150
 const cy = 150
@@ -70,6 +70,7 @@ function init() {
     GID("z4").setAttribute("d", arc(45, 90));
 
     GID("valeur").textContent=".....";
+    chargerLangue();
     setInterval(Sequenceur1s, 1000);
     
 
@@ -84,6 +85,8 @@ function Sequenceur1s() {
         let minutes = Math.floor(sec / 60);
         let secondes = sec % 60;
         let age = minutes + ":" + secondes.toString().padStart(2, '0');
+        if (minutes>=10 && minutes<15) age="<span color='orange'>" + age + "</span>";
+        if (minutes>=15 ) age="<span color='red'>" + age + "</span>";
         GH("lAge", age);
     }
 }

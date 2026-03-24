@@ -4,6 +4,7 @@
 #include "Ecran/Gestion.h"
 #include "Ecran/pageCompte.h"
 #include "Stock.h"
+#include "Langues/Langue.h"
 // ==========================
 // PARAMETRES
 // ==========================
@@ -178,7 +179,7 @@ void handleTouch_clavier(int tx, int ty)
             password = textBuffer;
             RecordFichierParametres();
             CanvaBase->fillScreen(RGB565_DARKGREY);
-            PrintCentre(CanvaBase, "Redémarrage...", EcranW / 2, EcranH / 2, 2);
+            PrintCentre(CanvaBase, T("Restart"), EcranW / 2, EcranH / 2, 2);
             CanvaBase->flush();
             delay(1000);
             ESP.restart();
@@ -232,21 +233,21 @@ void Position(int row, int col, int &x, int &y, int &keyWidth, int &keyHeight)
 
 void setup_clavier()
 {
-  String Titre = "Clavier";
+  String Titre = T("Clavier");
   CanvaBase->fillScreen(RGB565_DARKGREY);
   if (PageActu == pageClavier_WifiPwd)
   {
-    Titre = "Mot de passe du réseau " + ssid;
+    Titre = T("PassWiFi") + ssid;
     textBuffer = password;
   }
   if (PageActu == pageClavier_CompteEmail)
   {
-    Titre = "Email du Compte LibreLink Up";
+    Titre = T("EmailLinkUp");
     textBuffer = libreEmail;
   }
   if (PageActu == pageClavier_ComptePwd)
   {
-    Titre = "Password du Compte LibreLink Up";
+    Titre = T("PasseLinkUp");
     textBuffer = librePass;
   }
 

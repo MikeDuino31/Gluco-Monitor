@@ -6,6 +6,7 @@
 #include <Ecran/pageClavier.h>
 #include <Ecran/pageLibreServeur.h>
 #include <Stock.h>
+#include "Langues/Langue.h"
 
 static Bouton Boutons[4] = {
     {15, 288, 110, 30, "Modifier"},
@@ -17,14 +18,18 @@ void drawPara(String Titre, String Valeur, int H0, int index);
 void CompteSetup()
 {
     PageActu = pageCompte;
+    Boutons[0].Texte=T("Modifier");
+    Boutons[1].Texte=T("Modifier");
+    Boutons[2].Texte=T("Modifier");
+    Boutons[3].Texte=T("Tester");
     CanvaBase->setFont(u8g2_font_helvB18_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
     CanvaBase->fillScreen(C_grisFonce);
-    PrintCentre(CanvaBase, "Compte LibreLinkUp", EcranW / 2, 30, 1);
+    PrintCentre(CanvaBase, T("Compte") + " LibreLinkUp", EcranW / 2, 30, 1);
 
     drawPara("Email", libreEmail, 50, 0);
-    drawPara("Password", librePass, 110, 1);
-    String zoneAffichee = "Non définie";
+    drawPara(T("Password"), librePass, 110, 1);
+    String zoneAffichee = T("Undefined");
     for (int i = 0; i < 12; i++)
     {
 
@@ -37,7 +42,7 @@ void CompteSetup()
             }
         }
     }
-    drawPara("Zone serveur", zoneAffichee, 170, 2);
+    drawPara(T("ServerZone"), zoneAffichee, 170, 2);
 
     Bouton_Trace(Boutons[3]); // Tester
    
@@ -82,15 +87,15 @@ void handleTouch_Compte(uint16_t touchX, uint16_t touchY)
         if (loginLibreLinkUp())
         {
             CanvaBase->setFont(u8g2_font_helvB18_tf);
-            PrintCentre(CanvaBase, "Connexion réussie !", EcranW / 2, 255, 1);
+            PrintCentre(CanvaBase, T("ConnectOK"), EcranW / 2, 255, 1);
         }
         else
         { //Problème
             CanvaBase->setFont(u8g2_font_10x20_tf);
             if (ServerConnu){
-                 PrintCentre(CanvaBase, "Utilisateur inconnu sur le serveur", EcranW / 2, 255, 1);
+                 PrintCentre(CanvaBase, T("UserUnknown"), EcranW / 2, 255, 1);
             } else {
-                 PrintCentre(CanvaBase, "Serveur innacessible", EcranW / 2, 255, 1);
+                 PrintCentre(CanvaBase, T("ServerNoAccess"), EcranW / 2, 255, 1);
             }
             
         }

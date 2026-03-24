@@ -8,7 +8,7 @@ const char *BruteHtml = R"====(
 
 <head>
     <meta charset="UTF-8">
-    <title>Visualisation JSON</title>
+    <title>Libreview DATA</title>
     <script src="/JS_Commun"></script>
     <style>
         body {
@@ -19,6 +19,10 @@ const char *BruteHtml = R"====(
         a {
             color: black;
             text-decoration: none;
+        }
+
+        a:hover {
+            color: blue;
         }
 
         .json-key {
@@ -51,23 +55,71 @@ const char *BruteHtml = R"====(
             padding-left: 20px;
         }
 
+        .top {
+            width: 100%;
+            display: flex;
+        }
+
         .MiniMenu {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px;
+            border: solid 4px lightblue;
+            border-radius: 10px;
+            padding: 4px;
+            background-color: #d2dbe0;
+            font-weight: bold;
+        }
+
+        .MiniMenu div {
+            padding-top: 10px;
+        }
+
+        .Menudroite {
             text-align: right;
-            font-size: 30px;
+            width: 50%;
+        }
+
+        .Menugauche {
+            text-align: left;
+            display: inline-flex;
+            width: 50%;
+        }
+
+        .MenuChoisi {
+            border-radius: 6px;
+            margin: 2px;
+            border: inset 2px grey;
+            background-color: lightgrey;
+            padding: 2px;
         }
     </style>
 </head>
 
 <body onload="Init();">
-    <div class="MiniMenu"><a href="/">...</a><br><a href="/Restart">Restart</a></div>
-    <h1>Gluco-Monitor</h1>
-    <h4>Cliquez sur {} pour ouvrir ou fermer l'arborescence</h4>
-    <h2>Affichage Arborescent Messages Libreview JSON</h2>
-    <h3>Login à Libreview</h3>
+    <div class="top">
+        <div class="Menugauche"><img src="/favicon.ico" />
+            <h1>Gluco-Monitor</h1>
+        </div>
+        <div class="Menudroite">
+            <div class="MiniMenu">
+                <div><a href="/" data-i18n="Glucose">-Glyc-</a></div>
+                <div class="MenuChoisi"><a href="/Brute" data-i18n="dataLibreview">-Libreview-</a></div>
+                <div><a href="/OTA" data-i18n="Update">-M à jour-</a></div>
+                <div><a href="/Restart" data-i18n="Restart">-Restart-</a></div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <h2 data-i18n="DisplayArbo">-Affichage Arbo-</h2>
+    <h4 data-i18n="Arbo">-arborescence-</h4>
+    <h3 data-i18n="LogLibreview">-Log Libreview-</h3>
     <div id="LoginJSON"></div>
-    <h3>Connexion à Libreview</h3>
+    <h3 data-i18n="ConnectLibreview">-ConnexionLibreview-</h3>
     <div id="ConnectionJSON"></div>
-    <h3>Graphe de Libreview</h3>
+    <h3 data-i18n="GraphLibreview">Graphe de Libreview</h3>
     <div id="GraphJSON"></div>
 
     <script>
@@ -145,9 +197,14 @@ const char *BruteHtml = R"====(
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    let obj = JSON.parse(this.responseText);
-                    renderJSON(obj, "LoginJSON");
+                    if (this.responseText.indexOf("lastName")) {// user reconnu
+                        let obj = JSON.parse(this.responseText);
+                        renderJSON(obj, "LoginJSON");
+                    } else {
+                        GH("LoginJSON", this.responseText);
+                    }
                 }
+
             };
             xhttp.open('GET', '/LoginJSON', true);
             xhttp.send();
@@ -156,8 +213,12 @@ const char *BruteHtml = R"====(
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    let obj = JSON.parse(this.responseText);
-                    renderJSON(obj, "ConnectionJSON");
+                    if (this.responseText.indexOf("lastName")) {// patient reconnu
+                        let obj = JSON.parse(this.responseText);
+                        renderJSON(obj, "ConnectionJSON");
+                    } else {
+                        GH("ConnectionJSON", this.responseText);
+                    }
                 }
             };
             xhttp.open('GET', '/ConnectionJSON', true);
@@ -167,8 +228,12 @@ const char *BruteHtml = R"====(
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    let obj = JSON.parse(this.responseText);
-                    renderJSON(obj, "GraphJSON");
+                    if (this.responseText.indexOf("lastName")) {// patient reconnu
+                        let obj = JSON.parse(this.responseText);
+                        renderJSON(obj, "GraphJSON");
+                    } else {
+                        GH("GraphJSON", this.responseText);
+                    }
                 }
             };
             xhttp.open('GET', '/GraphJSON', true);
@@ -176,6 +241,7 @@ const char *BruteHtml = R"====(
         }
 
         function Init() {
+            chargerLangue();
             LoadLoginJSON();
             LoadConnectionJSON();
             LoadGraphJSON()

@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include "Ecran/Gestion.h"
+#include "Ecran/pageConfiguration.h"
 #include "Stock.h"
 #include "Langues/Langue.h"
 
@@ -21,7 +22,7 @@ void pageLangueSetup()
     CanvaBase->setFont(u8g2_font_helvB18_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
     CanvaBase->fillScreen(C_grisFonce);
-    PrintCentre(CanvaBase, "Langue", EcranW / 2, 30, 1);
+    PrintCentre(CanvaBase, T("Lang"), EcranW / 2, 30, 1);
 
     CanvaBase->fillRoundRect(7, 80, EcranW - 14, 100, 8, RGB565_NAVY);
     CanvaBase->drawRoundRect(7, 80, EcranW - 14, 100, 8, RGB565_WHITE);
@@ -38,7 +39,8 @@ void handleTouch_Langue(uint16_t touchX, uint16_t touchY)
         {
             LaLangue = i;
             RecordFichierParametres();
-            DrawBoutons_();
+            pageLangueSetup();
+            ParaInit();
         }
     }
 }
