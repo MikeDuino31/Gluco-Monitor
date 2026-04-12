@@ -17,7 +17,7 @@
  const char* codeTZ[] =
 {
   "UTC0",                               // UTC
-  "GMT0",                               // Royaume-Uni hiver
+  "GMT0BST,M3.5.0/1,M10.5.0/2",         // Royaume-Uni 
 
   "CET-1CEST,M3.5.0,M10.5.0/3",         // Europe centrale
   "EET-2EEST,M3.5.0/3,M10.5.0/4",       // Europe de l'Est
