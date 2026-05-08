@@ -13,6 +13,11 @@ enum GlucoseUnit {
     GLUCOSE_UNIT_MGDL = 0,
     GLUCOSE_UNIT_MMOLL = 1
 };
+//Couleur affichage glycemeie
+enum GlucoseColor {
+    GLUCOSE_BLANC = 0,
+    GLUCOSE_COULEUR = 1
+};
 
 #define RecurrenceGlycemie 120000 // 2 minutes
 
@@ -62,6 +67,7 @@ extern int8_t TrendArrow;
 extern unsigned long lastGlyUnixTime;
 extern int16_t GlycemieVal, targetLow,targetHigh;
 extern GlucoseUnit glucoseUnit;
+extern GlucoseColor glucoseColor;
 
 extern String ES, FS, GS, RS, US;
 

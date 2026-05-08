@@ -6,12 +6,15 @@
 #include "Stock.h"
 #include "Langues/Langue.h"
 
-static RadioBouton Rboutons[5] = {
-    {10, 110, 15, "25%"},
-    {10, 110, 15, "50%"},
-    {10, 110, 15, "100%"},
-    {10, 240, 15, "0°"},
-    {10, 240, 15, "180°"}};
+static RadioBouton Rboutons[8] = {
+    {10, 90, 15, "10%"},
+    {10, 90, 15, "25%"},
+    {10, 90, 15, "50%"},
+    {10, 90, 15, "100%"},
+    {10, 180, 15, "0°"},
+    {10, 180, 15, "180°"},
+    {10, 270, 15, "Blanc"},
+    {10, 270, 15, "Couleur"}};
 
 void DrawBoutons();
 
@@ -23,18 +26,26 @@ void pageAffichageSetup()
     CanvaBase->fillScreen(C_grisFonce);
     PrintCentre(CanvaBase, T("Display"), EcranW / 2, 30, 1);
     //============= Luminosité ==========================
-    CanvaBase->fillRoundRect(7, 50, EcranW - 14, 110, 8, RGB565_NAVY);
-    CanvaBase->drawRoundRect(7, 50, EcranW - 14, 110, 8, RGB565_WHITE);
+    CanvaBase->fillRoundRect(7, 50, EcranW - 14, 80, 8, RGB565_NAVY);
+    CanvaBase->drawRoundRect(7, 50, EcranW - 14, 80, 8, RGB565_WHITE);
     CanvaBase->setFont(u8g2_font_helvB14_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
-    PrintCentre(CanvaBase, T("Luminosite"), EcranW / 2, 80, 1);
+    PrintCentre(CanvaBase, T("Luminosite"), EcranW / 2, 70, 1);
 
     //============= Rotation ==========================
-    CanvaBase->fillRoundRect(7, 180, EcranW - 14, 110, 8, RGB565_NAVY);
-    CanvaBase->drawRoundRect(7, 180, EcranW - 14, 110, 8, RGB565_WHITE);
+    CanvaBase->fillRoundRect(7, 140, EcranW - 14, 80, 8, RGB565_NAVY);
+    CanvaBase->drawRoundRect(7, 140, EcranW - 14, 80, 8, RGB565_WHITE);
     CanvaBase->setFont(u8g2_font_helvB14_tf);
     CanvaBase->setTextColor(RGB565_WHITE);
-    PrintCentre(CanvaBase, T("Rotation"), EcranW / 2, 210, 1);
+    PrintCentre(CanvaBase, T("Rotation"), EcranW / 2, 160, 1);
+
+//============= Couleur Glycémie ======================
+    CanvaBase->fillRoundRect(7, 230, EcranW - 14, 80, 8, RGB565_NAVY);
+    CanvaBase->drawRoundRect(7, 230, EcranW - 14, 80, 8, RGB565_WHITE);
+    CanvaBase->setFont(u8g2_font_helvB14_tf);
+    CanvaBase->setTextColor(RGB565_WHITE);
+    PrintCentre(CanvaBase, T("CouleurGlycemie"), EcranW / 2, 250, 1);
+
     DrawBoutons();
 
     CanvaBase->flush();
@@ -43,31 +54,40 @@ void pageAffichageSetup()
 void handleTouch_Affichage(uint16_t touchX, uint16_t touchY)
 { 
     int8_t oldRotation=rotation;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 8; i++)
     {
         if (RadioBouton_Appui(Rboutons[i], touchX, touchY))
         {
             switch (i)
             {
             case 0:
-                LuminositeNuit = 50;
+                LuminositeNuit = 15;
                 break;
             case 1:
-                LuminositeNuit = 100;
+                LuminositeNuit = 40;
                 break;
             case 2:
-                LuminositeNuit = 255;
+                LuminositeNuit = 100;
                 break;
             case 3:
-                rotation = 1;
+                LuminositeNuit = 255;
                 break;
             case 4:
+                rotation = 1;
+                break;
+            case 5:
                 rotation = 3;
+                break;
+            case 6:
+                glucoseColor = GLUCOSE_BLANC;
+                break;
+            case 7:
+                glucoseColor = GLUCOSE_COULEUR;
                 break;
             }
             
             DrawBoutons();
-            if (i < 3)
+            if (i < 4)
             {
                 ledcWrite(GFX_BL, LuminositeNuit);
                 delay(1000);
@@ -82,10 +102,10 @@ void handleTouch_Affichage(uint16_t touchX, uint16_t touchY)
 }
 void DrawBoutons()
 {
-    int16_t Seuil[3] = {50, 100, 255};
-    for (int i = 0; i < 3; i++)
+    int16_t Seuil[4] = {15, 40, 100, 255};
+    for (int i = 0; i < 4; i++)
     {
-        Rboutons[i].X0 = EcranW * (i * 3 + 1) / 9;
+        Rboutons[i].X0 = EcranW * (i * 3 + 2) / 13-20;
         if (LuminositeNuit == Seuil[i])
         {
             RadioBouton_Trace(Rboutons[i], RGB565_BLUE);
@@ -96,10 +116,23 @@ void DrawBoutons()
         }
     }
     int16_t rot[2] = {1, 3};
-    for (int i = 3; i < 5; i++)
+    for (int i = 4; i < 6; i++)
     {
-        Rboutons[i].X0 = EcranW * (i * 2 -5) / 4;
-        if (rotation == rot[i - 3])
+        Rboutons[i].X0 = EcranW * (i * 2 -7) / 4-20;
+        if (rotation == rot[i - 4])
+        {
+            RadioBouton_Trace(Rboutons[i], RGB565_BLUE);
+        }
+        else
+        {
+            RadioBouton_Trace(Rboutons[i]);
+        }
+    }
+    int16_t coul[2] = {0, 1};
+    for (int i = 6; i < 8; i++)
+    {
+        Rboutons[i].X0 = EcranW * (i * 2 -11) / 4-20;
+        if (glucoseColor == coul[i - 6])
         {
             RadioBouton_Trace(Rboutons[i], RGB565_BLUE);
         }

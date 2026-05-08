@@ -88,6 +88,10 @@ void DeserializeConfiguration(String json) {
 
   int glucoseUnitInt = conf["glucoseUnit"] | GLUCOSE_UNIT_MGDL;
   glucoseUnit = (GlucoseUnit)glucoseUnitInt;
+
+  // Couleur affichage glycémie
+  int glucoseColorInt = conf["glucoseColor"] | GLUCOSE_BLANC;
+  glucoseColor = (GlucoseColor)glucoseColorInt;
 }
 
 String SerializeConfiguration() {
@@ -112,6 +116,8 @@ String SerializeConfiguration() {
   // Sensor type
   conf["sensorType"] = (int) sensorType;
   conf["glucoseUnit"] = (int) glucoseUnit;
+  //Couleur affichage glycémie
+  conf["glucoseColor"] = (int) glucoseColor;
   
   String Json;
   serializeJson(conf, Json);

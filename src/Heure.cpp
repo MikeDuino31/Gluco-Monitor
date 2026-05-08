@@ -120,7 +120,7 @@ void FormatteHeureDate()
   Int_Minute = timeinfo.tm_min;
   Jour = timeinfo.tm_wday; //-1=inconnu,0=dimanche,1=lundi...
   T_On_seconde = esp_timer_get_time() / 1000000; //Timer en microseconde sur 64 bits
-  if (Int_Heure < 7 || Int_Heure >= 23)
+  if (Int_Heure < 7 || Int_Heure >= 21)
   {
     ledcWrite(GFX_BL, LuminositeNuit); // Baisser la luminosité la nuit ?????????????????????????????
   }

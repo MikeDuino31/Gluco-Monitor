@@ -13,7 +13,11 @@
 v1.0 : 1er version de base / First Version Freestyle Only in mg/dL
 v2.0 : Ajout du support du Dexcom  / Added Dexcom  support    
 v3.0 : Ajout du support des unités mmol/L  / Added support for mmol/L units 
-
+v3.1 : Choix couleurs ou blanc de la valeur de glycémie
+       Choix à 10% de luminosité la nuit
+v3.2 : Correction du mapping des flèches de tendance Dexcom
+       Ajout de la flèche DoubleUp et DoubleDown
+       Correction bug luminosité 10% la nuit
 */
 
 //Support available on : https://F1ATB.fr  Documentation and Forum in French and English

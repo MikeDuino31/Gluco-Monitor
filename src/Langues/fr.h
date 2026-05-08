@@ -87,11 +87,15 @@ inline const char *LangFR = R"====(
   "AutoOnMonitor":"Autorisez l'accès sur le moniteur",
   "SensorType":"Type de Capteur",
   "GlucoseUnit":"Unité du glucose",
+  "CouleurGlycemie":"Couleur de la glycémie",
+  "Blanc":"Blanc",
+  "Couleur":"Couleur",
   "SetDexcom":"Définir les paramètres Dexcom",
   "UsernameDexcom":"Nom d'utilisateur Dexcom Share",
   "PasseDexcom":"Mot de passe Dexcom Share",
   "Username":"Nom d'utilisateur",
   "Region":"Région",
-  "DexcomIndefini":"Compte Dexcom non défini"
+  "DexcomIndefini":"Compte Dexcom non défini",
+ 
 }
 )====";
